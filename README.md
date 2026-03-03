@@ -1,5 +1,7 @@
 # CVE Tracker
 
+**Live demo: [cve-tracker.vercel.app](https://cve-tracker.vercel.app)**
+
 A cybersecurity portfolio project that fetches recent vulnerabilities from the [National Vulnerability Database (NVD)](https://nvd.nist.gov) and displays them in an interactive dashboard.
 
 Built with **Next.js 16**, **React 19**, and **Tailwind CSS**. No TypeScript — plain JavaScript throughout.
@@ -71,7 +73,7 @@ CVE_Tracker/
 
 ```bash
 # 1. Clone the repository
-git clone <your-repo-url>
+git clone https://github.com/rohansamuel99/CVE_Tracker
 cd CVE_Tracker
 
 # 2. Install dependencies
