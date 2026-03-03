@@ -2,7 +2,7 @@
 
 **Live demo: [cve-tracker.vercel.app](https://cve-tracker.vercel.app)**
 
-A cybersecurity portfolio project that fetches recent vulnerabilities from the [National Vulnerability Database (NVD)](https://nvd.nist.gov) and displays them in an interactive dashboard.
+A cybersecurity project that fetches recent vulnerabilities from the [National Vulnerability Database (NVD)](https://nvd.nist.gov) and displays them in an interactive dashboard.
 
 Built with **Next.js 16**, **React 19**, and **Tailwind CSS**. No TypeScript — plain JavaScript throughout.
 
