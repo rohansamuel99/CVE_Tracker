@@ -88,9 +88,10 @@ function nvdDate(date) {
 /**
  * Async Server Component that fetches CVE data and renders the CVEList.
  *
- * Fetches the 60 most recently published CVEs within the last 30 days.
- * The 30-day window is required because the NVD API has no "sort by newest"
- * parameter — without a date range it returns results starting from 1988.
+ * Fetches up to 200 CVEs published in the last 2 days.
+ * The NVD API has no "sort by newest" parameter — it always returns results
+ * oldest-first. A short 2-day window ensures we get genuinely recent CVEs
+ * rather than the oldest entries in a larger range.
  *
  * Error handling:
  *   - Hard error (network failure, 5xx) → red error box
@@ -102,16 +103,16 @@ function nvdDate(date) {
 async function CVESection() {
   let data
 
-  // Restrict to the last 30 days so we only get recent, relevant CVEs.
-  // Without these date bounds the NVD API returns the oldest CVEs in its
-  // database (going back to 1988), not the newest ones.
+  // Restrict to the last 2 days so we only get the most recent CVEs.
+  // The NVD API returns results oldest-first with no sort parameter, so a
+  // short window + large resultsPerPage is the only way to see today's CVEs.
   const now = new Date()
-  const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
+  const twoDaysAgo = new Date(now.getTime() - 2 * 24 * 60 * 60 * 1000)
 
   try {
     data = await fetchCVEs({
-      resultsPerPage: 60,
-      pubStartDate: nvdDate(thirtyDaysAgo),
+      resultsPerPage: 200,
+      pubStartDate: nvdDate(twoDaysAgo),
       pubEndDate: nvdDate(now),
     })
   } catch (error) {

@@ -10,7 +10,7 @@ Built with **Next.js 16**, **React 19**, and **Tailwind CSS**. No TypeScript —
 
 ## Features
 
-- **Live CVE data** — pulls the 60 most recent CVEs published in the last 30 days from the NVD public API
+- **Live CVE data** — pulls up to 200 CVEs published in the last 2 days from the NVD public API
 - **Severity color-coding** — cards are visually color-coded by CVSS severity (Critical → red, High → orange, Medium → yellow, Low → green)
 - **Real-time search** — filter by CVE ID or keyword in the description as you type
 - **Severity filter** — one-click filter pills to show only Critical / High / Medium / Low CVEs
@@ -102,7 +102,7 @@ npm run lint     # Run ESLint
 ```
 Browser (page load)
   → app/page.jsx          [Server Component — runs on the server]
-    → lib/nvd.js           fetchCVEs() with pubStartDate = 30 days ago
+    → lib/nvd.js           fetchCVEs() with pubStartDate = 2 days ago
       → NVD API            services.nvd.nist.gov/rest/json/cves/2.0
     → normalizeCve()       flattens nested NVD response into clean objects
   → components/CVEList.jsx [Client Component — hydrated in the browser]
@@ -128,9 +128,9 @@ CVSS v3.1 (preferred) → CVSS v3.0 → CVSS v2 → null (shown as "N/A")
 
 Within each version, it prefers the **Primary** source (NIST's own score) over secondary vendor-supplied scores.
 
-### Why no date filter by default returns 1988 CVEs
+### Why a short date window is used instead of a large one
 
-The NVD API has no "sort by newest" parameter — it returns results in internal database order, which starts from the oldest CVEs ever recorded (1988). The app solves this by always passing `pubStartDate` (30 days ago) and `pubEndDate` (today) to restrict results to recent vulnerabilities.
+The NVD API has no "sort by newest" parameter — it always returns results oldest-first. With a large window (e.g. 30 days) and a small page size, you only ever see the oldest CVEs in the range. The app uses a 2-day window with `resultsPerPage: 200` to ensure results are genuinely recent. On most days there are 50–150 CVEs published, so 200 comfortably captures everything from the past 48 hours.
 
 ---
 
@@ -140,9 +140,9 @@ This project uses the [NVD CVE API 2.0](https://nvd.nist.gov/developers/vulnerab
 
 | Parameter | Used for |
 |---|---|
-| `resultsPerPage` | Fetch 60 CVEs per load |
-| `pubStartDate` | Start of the 30-day window |
-| `pubEndDate` | End of the 30-day window (today) |
+| `resultsPerPage` | Fetch up to 200 CVEs per load |
+| `pubStartDate` | Start of the 2-day window |
+| `pubEndDate` | End of the 2-day window (now) |
 
 ### Optional: Get a free API key
 
